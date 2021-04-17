@@ -4,6 +4,7 @@ from game_grid import GameGrid # class for modeling the game grid
 from tetromino import Tetromino # class for modeling the tetrominoes
 from picture import Picture # used representing images to display
 import os # used for file and directory operations
+import numpy as np
 from color import Color # used for coloring the game menu
 
 # MAIN FUNCTION OF THE PROGRAM
@@ -13,10 +14,10 @@ def start():
    # set the dimensions of the game grid
    grid_h, grid_w = 17, 12
    # set the size of the drawing canvas
-   canvas_h, canvas_w = 40 * grid_h, 40 * grid_w
-   stddraw.setCanvasSize(canvas_w, canvas_h) 
+   canvas_h, canvas_w = 40 * grid_h, 40 * grid_w + 100
+   stddraw.setCanvasSize(canvas_w, canvas_h)
    # set the scale of the coordinate system
-   stddraw.setXscale(-0.5, grid_w - 0.5)
+   stddraw.setXscale(-0.5, grid_w + 3)
    stddraw.setYscale(-0.5, grid_h - 0.5)
    
    # create the game grid
@@ -28,6 +29,9 @@ def start():
 
    # display a simple menu before opening the game
    display_game_menu(grid_h, grid_w)
+
+   # initial score
+   score = 0
    
    # main game loop (keyboard interaction for moving the tetromino) 
    while True:
@@ -62,6 +66,15 @@ def start():
          tiles_to_place = current_tetromino.tile_matrix
          # update the game grid by adding the tiles of the tetromino
          game_over = grid.update_grid(tiles_to_place)
+
+         indv_score = 0 # starting value for a full row's score
+         # check is_row_full for all rows
+         for i in range (grid_h):
+             if grid.is_row_full(i,grid.tile_matrix):
+              indv_score = grid.update_score()
+         score += int(indv_score)
+
+         print(score)
          # end the main game loop if the game is over
          if game_over:
             break
@@ -71,14 +84,14 @@ def start():
          grid.current_tetromino = current_tetromino
 
       # display the game grid and as well the current tetromino      
-      grid.display()
+      grid.display(score)
 
    print("Game over")
 
 # Function for creating random shaped tetrominoes to enter the game grid
 def create_tetromino(grid_height, grid_width):
    # type (shape) of the tetromino is determined randomly
-   tetromino_types = [ 'I', 'O', 'Z', 'L' ,'J' ,'S' ,'T' ]
+   tetromino_types = [ 'I', 'O', 'Z', 'L', 'J', 'S', 'T' ]
    random_index = random.randint(0, len(tetromino_types) - 1)
    random_type = tetromino_types[random_index]
    # create and return the tetromino
@@ -98,7 +111,7 @@ def display_game_menu(grid_height, grid_width):
    # path of the image file
    img_file = current_dir + "/menu_image.png"
    # center coordinates to display the image
-   img_center_x, img_center_y = (grid_width - 1) / 2, grid_height - 7
+   img_center_x, img_center_y = (grid_width + 2) / 2, grid_height - 7
    # image is represented using the Picture class
    image_to_display = Picture(img_file)
    # display the image
