@@ -11,6 +11,8 @@ class GameGrid:
       self.grid_width = grid_w
       # create the tile matrix to store the tiles placed on the game grid
       self.tile_matrix = np.full((grid_h, grid_w), None)
+      # create an array that contains full row's tile values
+      self.tile_num = np.zeros(grid_w)
       # the tetromino that is currently being moved on the game grid
       self.current_tetromino = None
       # game_over flag shows whether the game is over/completed or not
@@ -25,7 +27,7 @@ class GameGrid:
       self.box_thickness = 8 * self.line_thickness
 
    # Method used for displaying the game grid
-   def display(self):
+   def display(self,score):
       # clear the background canvas to empty_cell_color
       stddraw.clear(self.empty_cell_color)
       # draw the game grid
@@ -35,6 +37,8 @@ class GameGrid:
          self.current_tetromino.draw()
       # draw a box around the game grid 
       self.draw_boundaries()
+      # draw the score
+      self.draw_score(score)
       # show the resulting drawing with a pause duration = 250 ms
       stddraw.show(250)
          
@@ -68,6 +72,24 @@ class GameGrid:
       # coordinates of the bottom left corner of the game grid
       pos_x, pos_y = -0.5, -0.5
       stddraw.rectangle(pos_x, pos_y, self.grid_width, self.grid_height)
+      stddraw.setPenRadius()  # reset the pen radius to its default value
+
+   def draw_score(self,score):
+      # draw a box near the game grid as a rectangle
+      stddraw.setPenColor(self.boundary_color)  # using boundary_color
+      # set the pen radius
+      stddraw.setPenRadius(self.box_thickness)
+      # coordinates of the bottom left corner of the game grid
+      pos_x, pos_y = self.grid_width - 0.5,-0.5
+      stddraw.rectangle(pos_x, pos_y, 3.5, self.grid_height)
+      # set the text
+      text_color = Color(31, 160, 239)
+      stddraw.setFontFamily("Arial")
+      stddraw.setFontSize(30)
+      stddraw.setPenColor(text_color)
+      text_to_display = "SCORE"
+      stddraw.text(self.grid_width+1.2, 15, text_to_display)
+      stddraw.text(self.grid_width + 1.2, 14, str(score))
       stddraw.setPenRadius()  # reset the pen radius to its default value
 
    # Method used for checking whether the grid cell with given row and column 
@@ -107,3 +129,30 @@ class GameGrid:
                   self.game_over = True
       # return the game_over flag
       return self.game_over
+
+   # Method for checking if the given row is full by first looking if there are any empty columns in that row
+   # The method returns True when the row is full and False otherwise.
+   def is_row_full(self,row_n,tile_matrix):
+      k = 0  # to add the values of the tiles on the filled row to the array
+      for i in range(self.grid_width):
+          # check is there any empty column in that row
+          if tile_matrix[row_n][i] == None:
+              return False
+          # if not empty add the values of the filled row's tiles to the array
+          self.tile_num[k] = tile_matrix[row_n][i].get_number()
+          k += 1
+      # move down each tile by 1, starting from the above of the row
+      for i in range (row_n + 1, self.grid_height):
+          for j in range (self.grid_width):
+              tile_matrix[i-1][j] = tile_matrix[i][j]
+              if tile_matrix[i][j] != None:
+               tile_matrix[i][j].move(0,-1)
+      return True
+
+   # Method for updating the score for each individual row by using tile_num array
+   # obtained from the is_row_full method
+   def update_score(self):
+      indv_score = 0
+      for i in range (self.grid_width):
+         indv_score += self.tile_num[i]
+      return indv_score
