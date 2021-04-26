@@ -55,3 +55,19 @@ class Tile:
       stddraw.setFontFamily(Tile.font_family)
       stddraw.setFontSize(Tile.font_size)
       stddraw.boldText(self.position.x, self.position.y, str(self.number))
+      
+       # Method for drawing next tetromino's tiles
+   def draw_next(self):
+      # draw the tile as a filled square
+      stddraw.setPenColor(self.background_color)
+      stddraw.filledSquare(self.position.x+12.2, self.position.y-10, 0.5)
+      # draw the bounding box of the tile as a square
+      stddraw.setPenColor(self.boundary_color)
+      stddraw.setPenRadius(Tile.boundary_thickness)
+      stddraw.square(self.position.x+12.2, self.position.y-10, 0.5)
+      stddraw.setPenRadius()  # reset the pen radius to its default value
+      # draw the number on the tile
+      stddraw.setPenColor(self.foreground_color)
+      stddraw.setFontFamily(Tile.font_family)
+      stddraw.setFontSize(Tile.font_size)
+      stddraw.boldText(self.position.x+12.2, self.position.y-10, str(self.number))
