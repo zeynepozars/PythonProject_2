@@ -11,6 +11,7 @@ class Tetromino:
       # set grid_height and grid_width from input parameters
       self.grid_height = grid_height
       self.grid_width = grid_width
+      self.type = type  # tetromino type
       # set the shape of the tetromino based on the given type
       occupied_tiles = []
       if type == 'I':
@@ -82,6 +83,10 @@ class Tetromino:
          position.y = self.bottom_left_corner.y + (n - 1) - row_index
          # create the tile on the computed position 
          self.tile_matrix[row_index][col_index] = Tile(position)
+         
+    # Method to get tetromino's type
+    def get_type(self):
+        return cp.copy(self.type)
       
    # Method for drawing the tetromino on the game grid
    def draw(self):
