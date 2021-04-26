@@ -20,9 +20,12 @@ class Tile:
       # assign the number on the tile
       self.number = random.choice(rand_num)
       # set the colors of the tile
-      self.background_color = Color(151, 178, 199) # background (tile) color
-      self.foreground_color = Color(0, 100, 200) # foreground (number) color
-      self.boundary_color = Color(0, 100, 200) # boundary (box) color
+      self.foreground_color = Color(119, 110, 101)  # foreground (number) color
+      self.boundary_color = Color(180, 180, 180)  # boundary (box) color
+      if self.number == 2:
+         self.background_color = Color(240, 228, 220)  # background (tile) color
+      else: #self.number == 4:
+         self.background_color = Color(238, 225, 201) # background (tile) color
       # set the position of the tile as the given position
       self.position = Point(position.x, position.y)
 
@@ -34,8 +37,18 @@ class Tile:
    # Getter method for the position of the tile
    def get_position(self):
       # return the position of the tile
-      return cp.copy(self.position) 
-   
+      return cp.copy(self.position)
+
+   # Getter method for getting the value of the tile
+   def get_number(self):
+      # return the value of the tile
+      return cp.copy(self.number)
+
+   # Setter method for the value of the tile
+   def set_number(self,number):
+      # set the value of the tile as the given value
+      self.number = cp.copy(number)
+
    # Setter method for the color of the each tile value
    def set_color(self):
      if self.number == 4:
@@ -63,7 +76,6 @@ class Tile:
       else: # after 2048
         self.background_color = Color(60,59,50)
 
-
    # Method for moving the tile by dx along the x axis and by dy along the y axis
    def move(self, dx, dy):
       self.position.translate(dx, dy)
@@ -83,8 +95,8 @@ class Tile:
       stddraw.setFontFamily(Tile.font_family)
       stddraw.setFontSize(Tile.font_size)
       stddraw.boldText(self.position.x, self.position.y, str(self.number))
-      
-      # Method for drawing next tetromino's tiles
+
+   # Method for drawing next tetromino's tiles
    def draw_next(self):
       # draw the tile as a filled square
       stddraw.setPenColor(self.background_color)
@@ -99,5 +111,3 @@ class Tile:
       stddraw.setFontFamily(Tile.font_family)
       stddraw.setFontSize(Tile.font_size)
       stddraw.boldText(self.position.x+12.2, self.position.y-10, str(self.number))
-
-      
