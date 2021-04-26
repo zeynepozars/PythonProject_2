@@ -34,7 +34,17 @@ class Tile:
    # Getter method for the position of the tile
    def get_position(self):
       # return the position of the tile
-      return cp.copy(self.position) 
+      return cp.copy(self.position)
+
+   # Getter method for getting the value of the tile
+   def get_number(self):
+      # return the value of the tile
+      return cp.copy(self.number)
+
+   # Setter method for the value of the tile
+   def set_number(self,number):
+      # set the value of the tile as the given value
+      self.number = cp.copy(number)
 
    # Method for moving the tile by dx along the x axis and by dy along the y axis
    def move(self, dx, dy):
