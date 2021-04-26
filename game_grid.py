@@ -82,6 +82,9 @@ class GameGrid:
       # coordinates of the bottom left corner of the game grid
       pos_x, pos_y = self.grid_width - 0.5,-0.5
       stddraw.rectangle(pos_x, pos_y, 3.5, self.grid_height)
+      stddraw.setPenColor(Color(167, 160, 151))
+      stddraw.filledRectangle(pos_x + 0.03, pos_y + 0.09, 3.4, self.grid_height - 0.2)
+	
       # set the text
       text_color = Color(31, 160, 239)
       stddraw.setFontFamily("Arial")
