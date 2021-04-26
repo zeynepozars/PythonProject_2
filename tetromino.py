@@ -2,6 +2,7 @@ import random # each tetromino is created with a random x value above the grid
 from tile import Tile # used for representing each tile on the tetromino
 from point import Point # used for tile positions
 import numpy as np # fundamental Python module for scientific computing
+import copy as cp
 
 # Class used for representing tetrominoes with 7 different types/shapes
 # as (I, O, J, L, S, T and Z)
@@ -11,7 +12,7 @@ class Tetromino:
       # set grid_height and grid_width from input parameters
       self.grid_height = grid_height
       self.grid_width = grid_width
-      self.type = type  # tetromino type
+      self.type = type # tetromino type
       # set the shape of the tetromino based on the given type
       occupied_tiles = []
       if type == 'I':
@@ -83,11 +84,11 @@ class Tetromino:
          position.y = self.bottom_left_corner.y + (n - 1) - row_index
          # create the tile on the computed position 
          self.tile_matrix[row_index][col_index] = Tile(position)
-         
-    # Method to get tetromino's type
-    def get_type(self):
-        return cp.copy(self.type)
-      
+
+   # Method to get tetromino's type
+   def get_type(self):
+      return cp.copy(self.type)
+
    # Method for drawing the tetromino on the game grid
    def draw(self):
       n = len(self.tile_matrix)  # n = number of rows = number of columns
@@ -95,21 +96,22 @@ class Tetromino:
          for col in range(n):
             # draw each occupied tile (not equal to None) on the game grid
             if self.tile_matrix[row][col] != None:
-               # considering newly entered tetrominoes to the game grid that may 
+               # considering newly entered tetrominoes to the game grid that may
                # have tiles with position.y >= grid_height
                position = self.tile_matrix[row][col].get_position()
                if position.y < self.grid_height:
-                  self.tile_matrix[row][col].draw() 
-                  
-    # Method for drawing the next tetromino on the score bar
-    def draw_next_tet(self, curr_tet):
-        n = len(self.tile_matrix)  # n = number of rows = number of columns
-        for row in range(n):
-            for col in range(n):
-                # draw each occupied tile (not equal to None) on the game grid
-                if self.tile_matrix[row][col] != None:
-                    self.tile_matrix[row][col].set_number(curr_tet.tile_matrix[row][col].get_number())
-                    self.tile_matrix[row][col].draw_next()
+                  self.tile_matrix[row][col].draw()
+
+   # Method for drawing the next tetromino on the score bar
+   def draw_next_tet(self,curr_tet):
+      n = len(self.tile_matrix)  # n = number of rows = number of columns
+      for row in range(n):
+         for col in range(n):
+            # draw each occupied tile (not equal to None) on the game grid
+            if self.tile_matrix[row][col] != None:
+               self.tile_matrix[row][col].set_number(curr_tet.tile_matrix[row][col].get_number())
+               self.tile_matrix[row][col].draw_next()
+
 
    # Method for moving the tetromino in a given direction by 1 on the game grid
    def move(self, direction, game_grid):
@@ -214,7 +216,7 @@ class Tetromino:
          # rotating each tetromino according to the pivot point
          for col in range(n):
            for row in range(n):
-             if ((self.tile_matrix[col][row] != None) and (game_grid.is_occupied(col,row) != None)):
+             if ((self.tile_matrix[col][row] != None) and (game_grid.is_occupied(col,row) != None) and (game_grid.is_inside(col,row))):
                temp_x = self.tile_matrix[col][row].position.x
                temp_y = self.tile_matrix[col][row].position.y
                self.tile_matrix[col][row].position.x = pivot_x + pivot_y - temp_y
