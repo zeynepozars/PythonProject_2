@@ -149,10 +149,32 @@ class GameGrid:
                tile_matrix[i][j].move(0,-1)
       return True
 
-   # Method for updating the score for each individual row by using tile_num array
-   # obtained from the is_row_full method
-   def update_score(self):
-      indv_score = 0
-      for i in range (self.grid_width):
-         indv_score += self.tile_num[i]
-      return indv_score
+  # Method for updating the score for each individual row by using tile_num array
+    # obtained from the is_row_full method
+    def update_score(self, tile_num):
+        indv_score = 0
+        for i in range(self.grid_width):
+            indv_score += tile_num[i]
+        return indv_score
+
+    # Method for checking and updating the tiles according the rules of 2048 games
+    def check_2048(self, tile_matrix):
+        k = 0
+        for col in range(self.grid_width):
+            for row in range(self.grid_height - 1):
+                if tile_matrix[row][col] != None:
+                    # if the tile's value is the same as the value of tile above
+                    # multiply by 2 and take that value to add score
+                    if tile_matrix[row + 1][col] != None and tile_matrix[row][col].get_number() == tile_matrix[row + 1][
+                        col].get_number():
+                        tile_matrix[row][col].set_number(2 * tile_matrix[row][col].get_number())
+                        tile_matrix[row][col].set_color()
+                        self.tile_num2[k] = tile_matrix[row][col].get_number()
+                        k += 1
+
+                        # to drop the tiles above the merged tiles
+                        for i in range(row + 2, self.grid_height):
+                            tile_matrix[i - 1][col] = tile_matrix[i][col]
+                            if tile_matrix[i][col] != None:
+                                tile_matrix[i][col].move(0, -1)
+
