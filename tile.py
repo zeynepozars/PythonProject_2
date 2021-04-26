@@ -35,6 +35,34 @@ class Tile:
    def get_position(self):
       # return the position of the tile
       return cp.copy(self.position) 
+   
+   # Setter method for the color of the each tile value
+   def set_color(self):
+     if self.number == 4:
+        self.background_color = Color(238, 225, 201)
+     else:
+      self.foreground_color = Color(255, 255, 255)  # foreground (number) color
+      if self.number == 8:
+        self.background_color = Color(243, 178, 122) # background (tile) color
+      elif self.number == 16:
+        self.background_color = Color(246, 150, 100)  # background (tile) color
+      elif self.number == 32:
+        self.background_color = Color(247, 124, 95)  # background (tile) color
+      elif self.number == 64:
+        self.background_color = Color(247, 95, 59)  # background (tile) color
+      elif self.number == 128:
+        self.background_color = Color(237, 208, 115)  # background (tile) color
+      elif self.number == 256:
+        self.background_color = Color(237, 204, 98)
+      elif self.number == 512:
+        self.background_color = Color(238, 199, 82)
+      elif self.number == 1024:
+        self.background_color = Color(238, 199, 66)
+      elif self.number == 2048:
+        self.background_color = Color(239, 194, 46)
+      else: # after 2048
+        self.background_color = Color(60,59,50)
+
 
    # Method for moving the tile by dx along the x axis and by dy along the y axis
    def move(self, dx, dy):
@@ -55,3 +83,21 @@ class Tile:
       stddraw.setFontFamily(Tile.font_family)
       stddraw.setFontSize(Tile.font_size)
       stddraw.boldText(self.position.x, self.position.y, str(self.number))
+      
+      # Method for drawing next tetromino's tiles
+   def draw_next(self):
+      # draw the tile as a filled square
+      stddraw.setPenColor(self.background_color)
+      stddraw.filledSquare(self.position.x+12.2, self.position.y-10, 0.5)
+      # draw the bounding box of the tile as a square
+      stddraw.setPenColor(self.boundary_color)
+      stddraw.setPenRadius(Tile.boundary_thickness)
+      stddraw.square(self.position.x+12.2, self.position.y-10, 0.5)
+      stddraw.setPenRadius()  # reset the pen radius to its default value
+      # draw the number on the tile
+      stddraw.setPenColor(self.foreground_color)
+      stddraw.setFontFamily(Tile.font_family)
+      stddraw.setFontSize(Tile.font_size)
+      stddraw.boldText(self.position.x+12.2, self.position.y-10, str(self.number))
+
+      
