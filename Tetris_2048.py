@@ -54,6 +54,11 @@ def start():
          elif key_typed == "up":
             # rotate the tetromino 90 degree clock-wise
             current_tetromino.rotate(grid)
+         elif key_typed == "space":
+            # drop the tetromino
+            for i in range(grid_h):
+                current_tetromino.move("down", grid)
+         
          # clear the queue that stores all the keys pressed/typed
          stddraw.clearKeysTyped()
 
