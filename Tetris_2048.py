@@ -29,6 +29,10 @@ def start():
    # display a simple menu before opening the game
    display_game_menu(grid_h, grid_w)
    
+   # initial score
+    score = 0
+    speed = 250 #initial speed
+   
    # main game loop (keyboard interaction for moving the tetromino) 
    while True:
       # check user interactions via the keyboard
@@ -55,6 +59,7 @@ def start():
 
       # move (drop) the tetromino down by 1 at each iteration 
       success = current_tetromino.move("down", grid)
+      grid.connected_4()
 
       # place the tetromino on the game grid when it cannot go down anymore
       if not success:
@@ -62,8 +67,34 @@ def start():
          tiles_to_place = current_tetromino.tile_matrix
          # update the game grid by adding the tiles of the tetromino
          game_over = grid.update_grid(tiles_to_place)
+         
+         indv_score = 0  # starting value for a full row's score
+            ind_score = 0  # starting value for a merged tiles score
+
+            # check is_row_full for all rows
+            for i in range(grid_h):
+                grid.check_2048(grid.tile_matrix)
+                # score from merged tiles
+                ind_score = grid.update_score(grid.tile_num2)
+                if grid.is_row_full(i, grid.tile_matrix):
+                    # score from deleted full rows
+                    indv_score = grid.update_score(grid.tile_num)
+            grid.tile_num2 = np.zeros(100)  # for merged score
+            score_val = ind_score + indv_score
+            score += int(score_val)
+
+            print(score)
          # end the main game loop if the game is over
          if game_over:
+            break
+         # increasing difficulty by increasing speed as the game process
+         if score > 450:
+            speed = 10
+         elif score > 250:
+            speed = 50
+         elif score > 150:
+            speed = 100
+         if score > 10000:
             break
          # create the next tetromino to enter the game grid
          # by using the create_tetromino function defined below
@@ -72,7 +103,9 @@ def start():
 
       # display the game grid and as well the current tetromino      
       grid.display()
-
+      
+   # finish the game and display game over
+   finish_game(grid_h, grid_w)
    print("Game over")
 
 # Function for creating random shaped tetrominoes to enter the game grid
@@ -84,6 +117,24 @@ def create_tetromino(grid_height, grid_width):
    # create and return the tetromino
    tetromino = Tetromino(random_type, grid_height, grid_width)
    return tetromino
+
+# Function for displaying game over
+def finish_game(grid_height, grid_width):
+    # colors used for the menu
+    background_color = Color(28, 27, 36)
+    # clear the background canvas to background_color
+    stddraw.clear(background_color)
+    # get the directory in which this python code file is placed
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    # path of the image file
+    img_file = current_dir + "/game_over.png"
+    # center coordinates to display the image
+    img_center_x, img_center_y = (grid_width + 2) / 2, grid_height - 10
+    # image is represented using the Picture class
+    image_to_display = Picture(img_file)
+    # display the image
+    stddraw.picture(image_to_display, img_center_x, img_center_y)
+    stddraw.show(1000)
 
 # Function for displaying a simple menu before starting the game
 def display_game_menu(grid_height, grid_width):
