@@ -95,6 +95,16 @@ class Tetromino:
                position = self.tile_matrix[row][col].get_position()
                if position.y < self.grid_height:
                   self.tile_matrix[row][col].draw() 
+                  
+    # Method for drawing the next tetromino on the score bar
+    def draw_next_tet(self, curr_tet):
+        n = len(self.tile_matrix)  # n = number of rows = number of columns
+        for row in range(n):
+            for col in range(n):
+                # draw each occupied tile (not equal to None) on the game grid
+                if self.tile_matrix[row][col] != None:
+                    self.tile_matrix[row][col].set_number(curr_tet.tile_matrix[row][col].get_number())
+                    self.tile_matrix[row][col].draw_next()
 
    # Method for moving the tetromino in a given direction by 1 on the game grid
    def move(self, direction, game_grid):
